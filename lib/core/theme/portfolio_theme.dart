@@ -79,5 +79,5 @@ class PortfolioTheme extends InheritedWidget {
 }
 
 const String kMonoFont = 'monospace';
-const double kPortfolioAltMaxContentWidth = 1100;
-const double kPortfolioAltWideBreakpoint = 820;
+const double kPortfolioMaxContentWidth = 1100;
+const double kPortfolioWideBreakpoint = 820;
