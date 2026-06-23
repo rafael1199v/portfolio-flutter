@@ -32,7 +32,10 @@ class ContactSection extends StatelessWidget {
         ),
         const SizedBox(height: 24),
         InkWell(
-          onTap: () => openExternal(Uri(scheme: 'mailto', path: data.email)),
+          onTap: () => openExternal(
+            Uri(scheme: 'mailto', path: data.email),
+            context: context,
+          ),
           child: Text(
             data.email,
             style: TextStyle(
@@ -66,8 +69,11 @@ class ContactSection extends StatelessWidget {
               for (final s in data.socials) ...[
                 InkWell(
                   onTap: () => s.label == 'Correo'
-                      ? openExternal(Uri(scheme: 'mailto', path: data.email))
-                      : openExternal(Uri.parse(s.url)),
+                      ? openExternal(
+                          Uri(scheme: 'mailto', path: data.email),
+                          context: context,
+                        )
+                      : openExternal(Uri.parse(s.url), context: context),
                   child: _SocialRow(
                     label: s.label.toUpperCase(),
                     url: s.url

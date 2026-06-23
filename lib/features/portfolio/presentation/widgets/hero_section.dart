@@ -61,13 +61,16 @@ class HeroSection extends StatelessWidget {
             SolidButton(
               label: 'VER CURRICULUM',
               icon: Icons.arrow_forward,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const CvScreen()),
-              ),
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const CvScreen())),
             ),
             OutlineButton(
               label: 'CONTACTAME',
-              onTap: () => openExternal(Uri(scheme: 'mailto', path: data.email)),
+              onTap: () => openExternal(
+                Uri(scheme: 'mailto', path: data.email),
+                context: context,
+              ),
             ),
           ],
         ),
