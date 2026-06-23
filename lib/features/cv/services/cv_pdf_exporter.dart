@@ -19,13 +19,12 @@ class _CapturedImage {
   });
 }
 
-
 class CvPdfExporter {
   static Future<_CapturedImage> _captureOffscreen({
     required BuildContext context,
     required Widget child,
     required double logicalWidth,
-    double pixelRatio = 2.0,
+    double pixelRatio = 1.5,
   }) async {
     final repaintKey = GlobalKey();
     final overlay = Overlay.of(context, rootOverlay: true);
@@ -47,8 +46,10 @@ class CvPdfExporter {
     overlay.insert(entry);
     try {
       await WidgetsBinding.instance.endOfFrame;
-      final boundary = repaintKey.currentContext!.findRenderObject()
-          as RenderRepaintBoundary;
+      await WidgetsBinding.instance.endOfFrame;
+      final boundary =
+          repaintKey.currentContext!.findRenderObject()
+              as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: pixelRatio);
       final byteData = await image.toByteData(
         format: ui.ImageByteFormat.rawRgba,
@@ -65,16 +66,18 @@ class CvPdfExporter {
     }
   }
 
-  static Future<Uint8List> _buildPdf(_CapturedImage capture) async {
+  static Future<Uint8List> _buildPdf(
+    _CapturedImage capture,
+    PdfPageFormat format,
+  ) async {
     final image = pw.RawImage(
       bytes: capture.pixels,
       width: capture.width,
       height: capture.height,
     );
-    final width = PdfPageFormat.a4.width;
+    final width = format.width;
     final height = width * capture.height / capture.width;
-
-    final doc = pw.Document();
+    final doc = pw.Document(compress: false);
     doc.addPage(
       pw.Page(
         pageFormat: PdfPageFormat(width, height),
@@ -89,15 +92,20 @@ class CvPdfExporter {
     required BuildContext context,
     required Widget document,
     double logicalWidth = 1000,
+    double pixelRatio = 1.5,
   }) async {
     final capture = await _captureOffscreen(
       context: context,
       child: document,
       logicalWidth: logicalWidth,
+      pixelRatio: pixelRatio,
     );
-    final pdf = await _buildPdf(capture);
+
     await Printing.layoutPdf(
-      onLayout: (_) async => pdf,
+      onLayout: (format) async {
+        final pdf = await _buildPdf(capture, format);
+        return pdf;
+      },
       name: 'CV_Rafael_Vargas',
     );
   }
