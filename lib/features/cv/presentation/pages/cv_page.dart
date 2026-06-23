@@ -19,6 +19,20 @@ class _CvScreenState extends State<CvScreen> {
   Future<void> _exportPdf() async {
     if (_exporting) return;
     setState(() => _exporting = true);
+
+    final navigator = Navigator.of(context, rootNavigator: true);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const _GeneratingPdfDialog(),
+    );
+
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted) {
+      navigator.pop();
+      return;
+    }
+
     try {
       await CvPdfExporter.exportAndShare(
         context: context,
@@ -35,6 +49,7 @@ class _CvScreenState extends State<CvScreen> {
         );
       }
     } finally {
+      navigator.pop();
       if (mounted) setState(() => _exporting = false);
     }
   }
@@ -72,6 +87,41 @@ class _CvScreenState extends State<CvScreen> {
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _GeneratingPdfDialog extends StatelessWidget {
+  const _GeneratingPdfDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: Dialog(
+        backgroundColor: CvColors.background,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: CvColors.accent,
+                ),
+              ),
+              SizedBox(width: 18),
+              Text(
+                'Generando PDF…',
+                style: TextStyle(fontSize: 15, color: CvColors.textPrimary),
+              ),
+            ],
+          ),
         ),
       ),
     );
