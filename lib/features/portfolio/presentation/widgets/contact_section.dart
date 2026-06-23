@@ -65,30 +65,14 @@ class ContactSection extends StatelessWidget {
               const SizedBox(height: 14),
               for (final s in data.socials) ...[
                 InkWell(
-                  onTap: () => s.label == 'Correo' ? openExternal(Uri(scheme: 'mailto', path: data.email)) : openExternal(Uri.parse(s.url)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        s.label.toUpperCase(),
-                        style: TextStyle(
-                          fontFamily: kMonoFont,
-                          fontSize: 12,
-                          letterSpacing: 1,
-                          color: c.textSecondary,
-                        ),
-                      ),
-                      Text(
-                        s.url
-                            .replaceFirst('mailto:', '')
-                            .replaceFirst('https://', ''),
-                        style: TextStyle(
-                          fontFamily: kMonoFont,
-                          fontSize: 12,
-                          color: c.textPrimary,
-                        ),
-                      ),
-                    ],
+                  onTap: () => s.label == 'Correo'
+                      ? openExternal(Uri(scheme: 'mailto', path: data.email))
+                      : openExternal(Uri.parse(s.url)),
+                  child: _SocialRow(
+                    label: s.label.toUpperCase(),
+                    url: s.url
+                        .replaceFirst('mailto:', '')
+                        .replaceFirst('https://', ''),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -108,6 +92,61 @@ class ContactSection extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SocialRow extends StatelessWidget {
+  final String label;
+  final String url;
+  const _SocialRow({required this.label, required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = PortfolioTheme.of(context);
+    final labelWidget = Text(
+      label,
+      style: TextStyle(
+        fontFamily: kMonoFont,
+        fontSize: 12,
+        letterSpacing: 1,
+        color: c.textSecondary,
+      ),
+    );
+    final urlStyle = TextStyle(
+      fontFamily: kMonoFont,
+      fontSize: 12,
+      color: c.textPrimary,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 400) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              labelWidget,
+              const SizedBox(height: 3),
+              Text(url, style: urlStyle),
+            ],
+          );
+        }
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            labelWidget,
+            const SizedBox(width: 16),
+            Flexible(
+              child: Text(
+                url,
+                textAlign: TextAlign.end,
+                overflow: TextOverflow.ellipsis,
+                style: urlStyle,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
