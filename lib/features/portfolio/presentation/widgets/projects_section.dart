@@ -28,31 +28,52 @@ class ProjectsSection extends StatelessWidget {
       children: [
         const SectionLabel('SOFTWARE'),
         const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            const Expanded(child: SectionHeading('Proyectos Destacados')),
-            if (githubUrl != null)
-              InkWell(
-                onTap: () => openExternal(Uri.parse(githubUrl)),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Ver todos los repositorios',
-                      style: TextStyle(
-                        fontFamily: kMonoFont,
-                        fontSize: 11.5,
-                        letterSpacing: 1.5,
-                        color: c.textSecondary,
-                      ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final link = githubUrl == null
+                ? null
+                : InkWell(
+                    onTap: () => openExternal(Uri.parse(githubUrl)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Ver todos los repositorios',
+                          style: TextStyle(
+                            fontFamily: kMonoFont,
+                            fontSize: 11.5,
+                            letterSpacing: 1.5,
+                            color: c.textSecondary,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(Icons.north_east,
+                            size: 13, color: c.textSecondary),
+                      ],
                     ),
-                    const SizedBox(width: 6),
-                    Icon(Icons.north_east, size: 13, color: c.textSecondary),
+                  );
+
+            if (constraints.maxWidth < 560) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SectionHeading('Proyectos Destacados'),
+                  if (link != null) ...[
+                    const SizedBox(height: 14),
+                    link,
                   ],
-                ),
-              ),
-          ],
+                ],
+              );
+            }
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Expanded(child: SectionHeading('Proyectos Destacados')),
+                ?link,
+              ],
+            );
+          },
         ),
         const SizedBox(height: 28),
         _Grid(projects: data.projects),
