@@ -7,6 +7,7 @@ import 'common/theme_toggle.dart';
 class TopBar extends StatelessWidget {
   final bool isWide;
   final bool isDark;
+  final String activeSection;
   final VoidCallback onToggleTheme;
   final VoidCallback onProfile;
   final VoidCallback onProjects;
@@ -18,6 +19,7 @@ class TopBar extends StatelessWidget {
     super.key,
     required this.isWide,
     required this.isDark,
+    required this.activeSection,
     required this.onToggleTheme,
     required this.onProfile,
     required this.onProjects,
@@ -47,10 +49,26 @@ class TopBar extends StatelessWidget {
             runSpacing: 8,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              NavItem('PERFIL', active: true, onTap: onProfile),
-              NavItem('PROYECTOS', onTap: onProjects),
-              NavItem('EXPERIENCIA', onTap: onCareer),
-              NavItem('CONTACTO', onTap: onContact),
+              NavItem(
+                'PERFIL',
+                active: activeSection == 'profile',
+                onTap: onProfile,
+              ),
+              NavItem(
+                'PROYECTOS',
+                active: activeSection == 'projects',
+                onTap: onProjects,
+              ),
+              NavItem(
+                'EXPERIENCIA',
+                active: activeSection == 'experience',
+                onTap: onCareer,
+              ),
+              NavItem(
+                'CONTACTO',
+                active: activeSection == 'contact',
+                onTap: onContact,
+              ),
               ThemeToggle(isDark: isDark, onTap: onToggleTheme),
             ],
           )
