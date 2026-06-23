@@ -68,100 +68,109 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
           child: Builder(
             builder: (context) {
               final c = PortfolioTheme.of(context);
-              return Scaffold(
-                backgroundColor: c.background,
-                body: DottedBackground(
-                  child: SafeArea(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final isWide = constraints.maxWidth >=
-                            kPortfolioWideBreakpoint;
-                        return Stack(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                if (isWide) const SideRail(data: data),
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    controller: _scrollController,
-                                    child: Center(
-                                      child: ConstrainedBox(
-                                        constraints: const BoxConstraints(
-                                          maxWidth: kPortfolioMaxContentWidth,
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: isWide ? 40 : 20,
-                                            vertical: 20,
+              return PopScope(
+                canPop: !_menuOpen,
+                onPopInvokedWithResult: (didPop, result) {
+                  if (!didPop && _menuOpen) {
+                    setState(() => _menuOpen = false);
+                  }
+                },
+                child: Scaffold(
+                  backgroundColor: c.background,
+                  body: DottedBackground(
+                    child: SafeArea(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isWide =
+                              constraints.maxWidth >= kPortfolioWideBreakpoint;
+                          return Stack(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  if (isWide) const SideRail(data: data),
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      controller: _scrollController,
+                                      child: Center(
+                                        child: ConstrainedBox(
+                                          constraints: const BoxConstraints(
+                                            maxWidth: kPortfolioMaxContentWidth,
                                           ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TopBar(
-                                                isWide: isWide,
-                                                isDark: state.isDark,
-                                                onToggleTheme: toggleTheme,
-                                                onProfile: () =>
-                                                    _goTo(_profileKey),
-                                                onProjects: () =>
-                                                    _goTo(_projectsKey),
-                                                onCareer: () =>
-                                                    _goTo(_experienceKey),
-                                                onContact: () =>
-                                                    _goTo(_contactKey),
-                                                onMenu: () => setState(
-                                                    () => _menuOpen = true),
-                                              ),
-                                              const SizedBox(height: 56),
-                                              HeroSection(
-                                                key: _profileKey,
-                                                data: data,
-                                                isWide: isWide,
-                                              ),
-                                              const SizedBox(height: 96),
-                                              const AboutSection(data: data),
-                                              const SizedBox(height: 96),
-                                              WorkExperienceSection(
-                                                key: _experienceKey,
-                                                data: data,
-                                              ),
-                                              const SizedBox(height: 96),
-                                              ProjectsSection(
-                                                key: _projectsKey,
-                                                data: data,
-                                              ),
-                                              const SizedBox(height: 96),
-                                              ContactSection(
-                                                key: _contactKey,
-                                                data: data,
-                                              ),
-                                              const SizedBox(height: 48),
-                                            ],
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: isWide ? 40 : 20,
+                                              vertical: 20,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TopBar(
+                                                  isWide: isWide,
+                                                  isDark: state.isDark,
+                                                  onToggleTheme: toggleTheme,
+                                                  onProfile: () =>
+                                                      _goTo(_profileKey),
+                                                  onProjects: () =>
+                                                      _goTo(_projectsKey),
+                                                  onCareer: () =>
+                                                      _goTo(_experienceKey),
+                                                  onContact: () =>
+                                                      _goTo(_contactKey),
+                                                  onMenu: () => setState(
+                                                    () => _menuOpen = true,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 56),
+                                                HeroSection(
+                                                  key: _profileKey,
+                                                  data: data,
+                                                  isWide: isWide,
+                                                ),
+                                                const SizedBox(height: 96),
+                                                const AboutSection(data: data),
+                                                const SizedBox(height: 96),
+                                                WorkExperienceSection(
+                                                  key: _experienceKey,
+                                                  data: data,
+                                                ),
+                                                const SizedBox(height: 96),
+                                                ProjectsSection(
+                                                  key: _projectsKey,
+                                                  data: data,
+                                                ),
+                                                const SizedBox(height: 96),
+                                                ContactSection(
+                                                  key: _contactKey,
+                                                  data: data,
+                                                ),
+                                                const SizedBox(height: 48),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            if (_menuOpen)
-                              MobileMenu(
-                                data: data,
-                                isDark: state.isDark,
-                                onToggleTheme: toggleTheme,
-                                onClose: () =>
-                                    setState(() => _menuOpen = false),
-                                onProfile: () => _goTo(_profileKey),
-                                onProjects: () => _goTo(_projectsKey),
-                                onCareer: () => _goTo(_experienceKey),
-                                onContact: () => _goTo(_contactKey),
+                                ],
                               ),
-                          ],
-                        );
-                      },
+                              if (_menuOpen)
+                                MobileMenu(
+                                  data: data,
+                                  isDark: state.isDark,
+                                  onToggleTheme: toggleTheme,
+                                  onClose: () =>
+                                      setState(() => _menuOpen = false),
+                                  onProfile: () => _goTo(_profileKey),
+                                  onProjects: () => _goTo(_projectsKey),
+                                  onCareer: () => _goTo(_experienceKey),
+                                  onContact: () => _goTo(_contactKey),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
