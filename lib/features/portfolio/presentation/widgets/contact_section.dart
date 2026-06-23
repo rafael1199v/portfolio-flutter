@@ -65,7 +65,7 @@ class ContactSection extends StatelessWidget {
               const SizedBox(height: 14),
               for (final s in data.socials) ...[
                 InkWell(
-                  onTap: () => openExternal(Uri.parse(s.url)),
+                  onTap: () => s.label == 'Correo' ? openExternal(Uri(scheme: 'mailto', path: data.email)) : openExternal(Uri.parse(s.url)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
