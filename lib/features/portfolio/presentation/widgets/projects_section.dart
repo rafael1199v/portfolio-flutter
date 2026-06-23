@@ -33,7 +33,8 @@ class ProjectsSection extends StatelessWidget {
             final link = githubUrl == null
                 ? null
                 : InkWell(
-                    onTap: () => openExternal(Uri.parse(githubUrl)),
+                    onTap: () =>
+                        openExternal(Uri.parse(githubUrl), context: context),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -47,8 +48,11 @@ class ProjectsSection extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        Icon(Icons.north_east,
-                            size: 13, color: c.textSecondary),
+                        Icon(
+                          Icons.north_east,
+                          size: 13,
+                          color: c.textSecondary,
+                        ),
                       ],
                     ),
                   );
@@ -58,10 +62,7 @@ class ProjectsSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SectionHeading('Proyectos Destacados'),
-                  if (link != null) ...[
-                    const SizedBox(height: 14),
-                    link,
-                  ],
+                  if (link != null) ...[const SizedBox(height: 14), link],
                 ],
               );
             }

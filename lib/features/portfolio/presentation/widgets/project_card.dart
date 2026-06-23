@@ -15,7 +15,7 @@ class ProjectCard extends StatelessWidget {
     return InkWell(
       onTap: project.url.isEmpty
           ? null
-          : () => openExternal(Uri.parse(project.url)),
+          : () => openExternal(Uri.parse(project.url), context: context),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -40,9 +40,12 @@ class ProjectCard extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    openExternal(Uri.parse(project.url));
-                  },
+                  onPressed: project.url.isEmpty
+                      ? null
+                      : () => openExternal(
+                          Uri.parse(project.url),
+                          context: context,
+                        ),
                   icon: Icon(Icons.north_east, size: 14, color: c.textMuted),
                 ),
               ],
