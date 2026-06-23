@@ -30,11 +30,41 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   final _contactKey = GlobalKey();
 
   bool _menuOpen = false;
+  String _activeSection = 'profile';
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    final sections = <(String, GlobalKey)>[
+      ('profile', _profileKey),
+      ('experience', _experienceKey),
+      ('projects', _projectsKey),
+      ('contact', _contactKey),
+    ];
+    const trigger = 140.0;
+    var current = 'profile';
+    for (final (name, key) in sections) {
+      final ctx = key.currentContext;
+      if (ctx == null) continue;
+      final box = ctx.findRenderObject() as RenderBox?;
+      if (box == null) continue;
+      final dy = box.localToGlobal(Offset.zero).dy;
+      if (dy <= trigger) current = name;
+    }
+    if (current != _activeSection) {
+      setState(() => _activeSection = current);
+    }
   }
 
   void _scrollTo(GlobalKey key) {
@@ -109,6 +139,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                                                 TopBar(
                                                   isWide: isWide,
                                                   isDark: state.isDark,
+                                                  activeSection: _activeSection,
                                                   onToggleTheme: toggleTheme,
                                                   onProfile: () =>
                                                       _goTo(_profileKey),
