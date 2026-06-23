@@ -44,6 +44,13 @@ class ProfileFrame extends StatelessWidget {
                       ),
                     ),
                   ),
+                  errorBuilder: (context, error, stackTrace) => Center(
+                    child: Icon(
+                      Icons.person_outline,
+                      size: 64,
+                      color: c.textMuted,
+                    ),
+                  ),
                 ),
               ),
               Positioned(
